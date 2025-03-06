@@ -1,6 +1,7 @@
 const detailsModel = require("../model/detailsModel")
 const userModel = require("../model/usersModel")
 
+// CREATE DETAILS
 const createUserDetails = async (req, res) => {
     try {
         const {userId, age, address} = req.body
@@ -25,4 +26,28 @@ const createUserDetails = async (req, res) => {
         return res.status(500).json({message: "An error occured", error: error?.message})
     }
 }
-module.exports = {createUserDetails}
+
+// UPDATE DETAILS
+const updateDetail = async (req, res) => {
+    try {
+        const {age, address, userId} = req.body
+
+        const update = await detailsModel.findByIdAndUpdate(
+            req.params.id,{
+                age,
+                address,
+                userId
+        },
+        {
+            new: true
+        })
+
+        if(!update) {
+           return res.status(404).json({message: "Details not found"})
+        } 
+       return res.status(200).json({message: "Details updated successfully", data: update})
+    } catch (error) {
+        return res.status(500).json({message: "An error occured", error: error?.message})
+    }
+}
+module.exports = {createUserDetails, updateDetail}
